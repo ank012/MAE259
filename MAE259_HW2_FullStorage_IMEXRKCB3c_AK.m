@@ -20,14 +20,13 @@ b_ex = b;
 c = [0; (3375509829940/4525919076317);(272778623835/1039454778728); 1];
 
 u = 0.15*randn(N,1); 
-uhat = RC_RFFT(u,N); % Assuming RC_RFFT is a user-defined FFT function
+uhat = RC_RFFT(u,N); 
 
 s = 4;
 
 kx = (2*pi/L)*[0:N/2-1]'; 
-Aop = kx.^2 - kx.^4; % Assuming Aop is a diagonal matrix for KS equation
+Aop = kx.^2 - kx.^4; 
 
-% ... rest of the coefficients initialization remains the same ...
 startTime = tic;
 for k = 1:Tmax/dt
   %%%% ALL 3 RK SUBSTEPS %%%%
@@ -48,12 +47,7 @@ for k = 1:Tmax/dt
     g(:,rk) = rhat; % Explicit update for g (nonlinear term)
   end
   %%%% END OF RK LOOP %%%%
- 
-  %sum_b = sum(b*dt.*f(:,1:s),2) + sum(b*dt.*g(:,1:s),2); % Update uhat directly
-  %sum(b(1:rk).*f(:,1:rk), 2) + sum(b(1:rk).*g(:,1:rk), 2)
-
-  %uhat = uhat + sum_b; %bhat_im(1)*dt*f(:,1) + bhat_ex(1)*dt*g(:,1)+bhat_im(s)*dt*f(:,2) + bhat_ex(2)*dt*g(:,2)+bhat_im(s)*dt*f(:,) + bhat_ex(s)*dt*g(:,s);
-  uhat = uhat + sum(b_im(1:s)'.*f(:,1:s), 2) + sum(b(1:s)'.*g(:,1:s), 2); %bhat_im(1)*dt*f(:,1) + bhat_ex(1)*dt*g(:,1)+bhat_im(s)*dt*f(:,2) + bhat_ex(2)*dt*g(:,2)+bhat_im(s)*dt*f(:,) + bhat_ex(s)*dt*g(:,s);
+   uhat = uhat + sum(b_im(1:s)'.*f(:,1:s), 2) + sum(b(1:s)'.*g(:,1:s), 2); %bhat_im(1)*dt*f(:,1) + bhat_ex(1)*dt*g(:,1)+bhat_im(s)*dt*f(:,2) + bhat_ex(2)*dt*g(:,2)+bhat_im(s)*dt*f(:,) + bhat_ex(s)*dt*g(:,s);
 
   %%Plotting
 rs(k,:)=RC_RFFTinv(uhat,N)'; ts(k)=k*dt; % These variables are just used for plotting...
