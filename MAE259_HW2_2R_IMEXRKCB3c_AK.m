@@ -27,20 +27,19 @@ bhat_ex = [449556814708/1155810555193, 0, 210901428686/1400818478499,48017556421
 
 
 u = 0.15*randn(N,1); 
-uhat = RC_RFFT(u,N); % Assuming RC_RFFT is a user-defined FFT function
+uhat = RC_RFFT(u,N); 
 
 s = 4;
 
 kx = (2*pi/L)*[0:N/2-1]'; 
-Aop = kx.^2 - kx.^4; % Assuming Aop is a diagonal matrix for KS equation
-f = Aop;
-% ... rest of the coefficients initialization remains the same ...
+Aop = kx.^2 - kx.^4; 
+
 startTime = tic;
 for k = 1:Tmax/dt
   %%%% ALL 3 RK SUBSTEPS %%%%
   for rk = 1:s
     uhat(fix(N/3)+1:end)=0;  % Dealias (see Section 5.7).
-    r = RC_RFFTinv(uhat,N); % Assuming RC_RFFTinv is a user-defined inverse FFT function 
+    r = RC_RFFTinv(uhat,N);
     r=-0.5*r.^2; 
     rhat=i*kx.*RC_RFFT(r,N);
     g(:,rk) = rhat;
