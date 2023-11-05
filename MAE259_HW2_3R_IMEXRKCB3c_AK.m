@@ -1,5 +1,5 @@
 clear
-%clc
+clc
 %%%%%%%%%%%%%%%%%%%% Initialize the simulation parameters (user input) %%%%%%%%%%%%%%%%%%%%
 L = 50; 
 Tmax = 100; 
@@ -23,26 +23,26 @@ u = 0.15*randn(N,1);
 uhat = RC_RFFT(u,N); % Assuming RC_RFFT is a user-defined FFT function
 s = 4;
 kx = (2*pi/L)*[0:N/2-1]'; 
-Aop = kx.^2 - kx.^4; % Assuming Aop is a diagonal matrix for KS equation
+Aop = kx.^2 - kx.^4; 
 f = Aop;
 % ... rest of the coefficients initialization remains the same ...
 startTime = tic;
 for k = 1:Tmax/dt
     for rk = 1:s
+    
   %%%% ALL 3 RK SUBSTEPS %%%%
   if rk == 1
          y = uhat;
     else 
-        y = uhat + (a_im(rk,rk-1)-b_im(rk-1)).*dt.* Z + (a_ex(rk,rk-1)-b_ex(rk-1)).*dt.*y;
+        y = uhat + (a_im(rk,rk-1)-b_im(rk-1)).*dt.* z + (a_ex(rk,rk-1)-b_ex(rk-1)).*dt.*y;
     end
-    Z = (Aop.*y)./(1-(a_im(rk,rk).*dt.*Aop));
+    z = (Aop.*y)./(1-(a_im(rk,rk).*dt.*Aop));
 
-    r=RC_RFFTinv(y + a_im(rk,rk).*dt.*Z,N);
+    r=RC_RFFTinv(y + a_im(rk,rk).*dt.*z,N);
     r=-0.5*r.*r;
-    rhat = i*kx.*RC_RFFT(r,N); %y=g(y+a_im(k,k)*z,tn+c_ex(k))
-
-    uhat = uhat + b_im(rk).*dt.*Z + b_ex(rk).*dt.*rhat;
-  
+    rhat = i*kx.*RC_RFFT(r,N); 
+    uhat = uhat + b_im(rk).*dt.*z + b_ex(rk).*dt.*rhat;
+  %%%% END OF RK SUBSTEPS %%%%
     rs(k,:)=RC_RFFTinv(uhat,N)'; ts(k)=k*dt; % These variables are just used for plotting...
     % if (mod(k,PlotInt)==0)
     %     pause(0.001); RC_PlotXY(x,rs(k,:),k*dt,0,L,-1.5,1.5);
@@ -52,7 +52,6 @@ for k = 1:Tmax/dt
     % end
     end 
 end 
-
 
 TotalTime = toc(startTime)
 
